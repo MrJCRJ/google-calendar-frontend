@@ -14,14 +14,21 @@ interface EventListProps {
 
 const EventList: React.FC<EventListProps> = ({ events }) => {
   return (
-    <div>
-      <h2>Eventos</h2>
-      <ul>
+    <div className="mt-4">
+      <h2 className="h4 mb-3">Eventos</h2>
+      <ul className="list-group">
         {events.map((event) => (
-          <li key={event.id}>
-            <strong>{event.title}</strong> - {event.start} até {event.end}
-            <br />
-            <a href={event.link} target="_blank" rel="noopener noreferrer">
+          <li key={event.id} className="list-group-item">
+            <strong className="h5">{event.title}</strong>
+            <p className="mb-1">
+              {event.start} até {event.end}
+            </p>
+            <a
+              href={event.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-outline-primary btn-sm"
+            >
               Ver no Google Calendar
             </a>
           </li>

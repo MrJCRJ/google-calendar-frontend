@@ -11,22 +11,25 @@ function App() {
 
   // Busca os eventos quando o usuário está autenticado
   useEffect(() => {
-    console.log("useEffect executado");
     if (isAuthenticated) {
       fetchEvents();
     }
-  }, [isAuthenticated, fetchEvents]); // fetchEvents está memoizada, então não causa renderizações desnecessárias
+  }, [isAuthenticated, fetchEvents]);
 
   return (
-    <div>
-      <h1>Eventos do Google Calendar</h1>
+    <div className="container mt-5">
+      <h1 className="text-center mb-4">Eventos do Google Calendar</h1>
       {isAuthenticated ? (
         <div>
-          <LogoutButton onClick={handleLogout} />
+          <div className="d-flex justify-content-end mb-4">
+            <LogoutButton onClick={handleLogout} />
+          </div>
           <EventList events={events} />
         </div>
       ) : (
-        <LoginButton onClick={handleLogin} />
+        <div className="text-center">
+          <LoginButton onClick={handleLogin} />
+        </div>
       )}
     </div>
   );

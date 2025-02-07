@@ -5,7 +5,14 @@ interface LogoutButtonProps {
 }
 
 const LogoutButton: React.FC<LogoutButtonProps> = ({ onClick }) => {
-  return <button onClick={onClick}>Logout</button>;
+  return (
+    <button
+      onClick={onClick}
+      className="btn btn-danger btn-sm" // Classes do Bootstrap
+    >
+      Logout
+    </button>
+  );
 };
 
 export default LogoutButton;

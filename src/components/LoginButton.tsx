@@ -5,7 +5,14 @@ interface LoginButtonProps {
 }
 
 const LoginButton: React.FC<LoginButtonProps> = ({ onClick }) => {
-  return <button onClick={onClick}>Login com Google</button>;
+  return (
+    <button
+      onClick={onClick}
+      className="btn btn-primary btn-lg" // Classes do Bootstrap
+    >
+      Login com Google
+    </button>
+  );
 };
 
 export default LoginButton;
