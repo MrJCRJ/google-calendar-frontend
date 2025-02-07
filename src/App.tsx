@@ -1,55 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import EventList from "./components/EventList";
-
-// Definindo o tipo para os eventos
-interface Event {
-  id: string;
-  title: string;
-  start: string;
-  end: string;
-  link: string;
-}
+import LoginButton from "./components/LoginButton";
+import LogoutButton from "./components/LogoutButton";
+import { useAuth } from "./hooks/useAuth";
+import { useEvents } from "./hooks/useEvents";
 
 function App() {
-  const [events, setEvents] = useState<Event[]>([]);
+  const { isAuthenticated, handleLogin, handleLogout } = useAuth();
+  const { events, fetchEvents } = useEvents();
 
-  // Função para iniciar a autenticação
-  const handleLogin = () => {
-    window.location.href = "http://localhost:3000/auth/google";
-  };
-
-  // Função para buscar os eventos
-  const fetchEvents = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/events");
-      if (!response.ok) {
-        throw new Error("Erro ao buscar eventos");
-      }
-      const data = await response.json();
-      setEvents(data);
-    } catch (error) {
-      console.error("Erro ao buscar eventos:", error);
-    }
-  };
-
-  // Verifica se o usuário está autenticado e busca os eventos
+  // Busca os eventos quando o usuário está autenticado
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
-
-    if (token) {
-      // Se houver um token, o usuário está autenticado
+    console.log("useEffect executado");
+    if (isAuthenticated) {
       fetchEvents();
     }
-  }, []);
+  }, [isAuthenticated, fetchEvents]); // fetchEvents está memoizada, então não causa renderizações desnecessárias
 
   return (
     <div>
       <h1>Eventos do Google Calendar</h1>
-      {events.length > 0 ? (
-        <EventList events={events} />
+      {isAuthenticated ? (
+        <div>
+          <LogoutButton onClick={handleLogout} />
+          <EventList events={events} />
+        </div>
       ) : (
-        <button onClick={handleLogin}>Login com Google</button>
+        <LoginButton onClick={handleLogin} />
       )}
     </div>
   );
