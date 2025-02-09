@@ -1,4 +1,5 @@
 import React from "react";
+import { FaGoogle } from "react-icons/fa";
 
 interface LoginButtonProps {
   onClick: () => void;
@@ -6,11 +7,8 @@ interface LoginButtonProps {
 
 const LoginButton: React.FC<LoginButtonProps> = ({ onClick }) => {
   return (
-    <button
-      onClick={onClick}
-      className="btn btn-primary btn-lg" // Classes do Bootstrap
-    >
-      Login com Google
+    <button onClick={onClick} className="btn btn-primary btn-lg">
+      <FaGoogle className="me-2" /> Login com Google
     </button>
   );
 };
