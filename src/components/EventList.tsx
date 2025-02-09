@@ -12,6 +12,7 @@ import {
   FaCalendarAlt,
   FaClock,
   FaChartBar,
+  FaTasks,
   FaExternalLinkAlt,
 } from "react-icons/fa";
 
@@ -41,11 +42,11 @@ const EventList: React.FC<EventListProps> = ({ events }) => {
     return differenceInMinutes(parseISO(end), parseISO(start));
   };
 
-  // Agrupar eventos por dia, semana e mês
+  // Função para agrupar eventos por período e por tarefa dentro de cada período
   const groupEventsByPeriod = () => {
-    const dailySummary: { [key: string]: number } = {};
-    const weeklySummary: { [key: string]: number } = {};
-    const monthlySummary: { [key: string]: number } = {};
+    const dailySummary: { [date: string]: { [task: string]: number } } = {};
+    const weeklySummary: { [date: string]: { [task: string]: number } } = {};
+    const monthlySummary: { [date: string]: { [task: string]: number } } = {};
 
     events.forEach((event) => {
       const startDate = parseISO(event.start);
@@ -55,14 +56,20 @@ const EventList: React.FC<EventListProps> = ({ events }) => {
 
       const duration = calculateDuration(event.start, event.end);
 
-      // Soma o tempo gasto por dia
-      dailySummary[dayKey] = (dailySummary[dayKey] || 0) + duration;
+      // Organiza por dia e tarefa
+      if (!dailySummary[dayKey]) dailySummary[dayKey] = {};
+      dailySummary[dayKey][event.title] =
+        (dailySummary[dayKey][event.title] || 0) + duration;
 
-      // Soma o tempo gasto por semana
-      weeklySummary[weekKey] = (weeklySummary[weekKey] || 0) + duration;
+      // Organiza por semana e tarefa
+      if (!weeklySummary[weekKey]) weeklySummary[weekKey] = {};
+      weeklySummary[weekKey][event.title] =
+        (weeklySummary[weekKey][event.title] || 0) + duration;
 
-      // Soma o tempo gasto por mês
-      monthlySummary[monthKey] = (monthlySummary[monthKey] || 0) + duration;
+      // Organiza por mês e tarefa
+      if (!monthlySummary[monthKey]) monthlySummary[monthKey] = {};
+      monthlySummary[monthKey][event.title] =
+        (monthlySummary[monthKey][event.title] || 0) + duration;
     });
 
     return { dailySummary, weeklySummary, monthlySummary };
@@ -89,15 +96,19 @@ const EventList: React.FC<EventListProps> = ({ events }) => {
           Resumo Diário
         </h3>
         <ul className="list-group">
-          {Object.entries(dailySummary).map(([date, duration]) => (
+          {Object.entries(dailySummary).map(([date, tasks]) => (
             <li key={date} className="list-group-item">
               <strong>
                 {format(parseISO(date), "dd/MM/yyyy", { locale: ptBR })}
               </strong>
-              <p className="mb-0">
-                <FaClock className="mr-2" />
-                Tempo total: {formatMinutesToHours(duration)}
-              </p>
+              <ul className="mt-2">
+                {Object.entries(tasks).map(([task, duration]) => (
+                  <li key={task}>
+                    <FaTasks className="mr-2" />
+                    {task}: {formatMinutesToHours(duration)}
+                  </li>
+                ))}
+              </ul>
             </li>
           ))}
         </ul>
@@ -110,16 +121,20 @@ const EventList: React.FC<EventListProps> = ({ events }) => {
           Resumo Semanal
         </h3>
         <ul className="list-group">
-          {Object.entries(weeklySummary).map(([date, duration]) => (
+          {Object.entries(weeklySummary).map(([date, tasks]) => (
             <li key={date} className="list-group-item">
               <strong>
                 Semana de{" "}
                 {format(parseISO(date), "dd/MM/yyyy", { locale: ptBR })}
               </strong>
-              <p className="mb-0">
-                <FaClock className="mr-2" />
-                Tempo total: {formatMinutesToHours(duration)}
-              </p>
+              <ul className="mt-2">
+                {Object.entries(tasks).map(([task, duration]) => (
+                  <li key={task}>
+                    <FaTasks className="mr-2" />
+                    {task}: {formatMinutesToHours(duration)}
+                  </li>
+                ))}
+              </ul>
             </li>
           ))}
         </ul>
@@ -132,15 +147,19 @@ const EventList: React.FC<EventListProps> = ({ events }) => {
           Resumo Mensal
         </h3>
         <ul className="list-group">
-          {Object.entries(monthlySummary).map(([date, duration]) => (
+          {Object.entries(monthlySummary).map(([date, tasks]) => (
             <li key={date} className="list-group-item">
               <strong>
                 {format(parseISO(date), "MMMM yyyy", { locale: ptBR })}
               </strong>
-              <p className="mb-0">
-                <FaClock className="mr-2" />
-                Tempo total: {formatMinutesToHours(duration)}
-              </p>
+              <ul className="mt-2">
+                {Object.entries(tasks).map(([task, duration]) => (
+                  <li key={task}>
+                    <FaTasks className="mr-2" />
+                    {task}: {formatMinutesToHours(duration)}
+                  </li>
+                ))}
+              </ul>
             </li>
           ))}
         </ul>
