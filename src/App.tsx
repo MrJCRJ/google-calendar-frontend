@@ -22,10 +22,20 @@ function App() {
 
   // Função para buscar eventos com o intervalo escolhido
   const handleFetchWithDates = () => {
-    fetchEvents(
-      startDate ? new Date(startDate).toISOString() : undefined,
-      endDate ? new Date(endDate).toISOString() : undefined
-    );
+    const startISO = startDate ? new Date(startDate).toISOString() : undefined;
+
+    let endISO;
+    if (endDate) {
+      const end = new Date(endDate);
+      end.setUTCHours(23, 59, 59, 999); // Agora, garantindo que é UTC direto
+      endISO = end.toISOString();
+    }
+
+    // Log para depuração
+    console.log("[DEBUG] startDate:", startDate, "->", startISO);
+    console.log("[DEBUG] endDate:", endDate, "->", endISO);
+
+    fetchEvents(startISO, endISO);
   };
 
   return (
