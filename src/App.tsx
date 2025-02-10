@@ -22,13 +22,21 @@ function App() {
 
   // Função para buscar eventos com o intervalo escolhido
   const handleFetchWithDates = () => {
-    const startISO = startDate ? new Date(startDate).toISOString() : undefined;
+    // Obtém o fuso horário do cliente (ex: -03:00 para Brasília)
+    const clientTimeZoneOffset = new Date().getTimezoneOffset(); // Em minutos
+    const clientTimeZone = formatTimezoneOffset(clientTimeZoneOffset); // Formata para -03:00
 
+    // Converte startDate para o formato com fuso horário do cliente
+    const startISO = startDate
+      ? new Date(startDate).toISOString().slice(0, -1) + clientTimeZone
+      : undefined;
+
+    // Converte endDate para o formato com fuso horário do cliente
     let endISO;
     if (endDate) {
       const end = new Date(endDate);
-      end.setUTCHours(23, 59, 59, 999); // Agora, garantindo que é UTC direto
-      endISO = end.toISOString();
+      end.setUTCHours(23, 59, 59, 999); // Define o horário final do dia
+      endISO = end.toISOString().slice(0, -1) + clientTimeZone;
     }
 
     // Log para depuração
@@ -36,6 +44,17 @@ function App() {
     console.log("[DEBUG] endDate:", endDate, "->", endISO);
 
     fetchEvents(startISO, endISO);
+  };
+
+  // Função para formatar o offset do fuso horário (ex: -180 -> "-03:00")
+  const formatTimezoneOffset = (offset: number): string => {
+    const hours = Math.floor(Math.abs(offset) / 60);
+    const minutes = Math.abs(offset) % 60;
+    const sign = offset <= 0 ? "+" : "-"; // Inverte o sinal porque getTimezoneOffset retorna valores negativos para fusos positivos
+    return `${sign}${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+      2,
+      "0"
+    )}`;
   };
 
   return (
