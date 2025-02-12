@@ -1,13 +1,12 @@
 import { useState, useCallback } from "react";
-import { Event } from "../../types/eventTypes"; // Importe a interface Event de um arquivo separado
-import { getClientTimeZone } from "../utils/dateUtils"; // Mova a lógica de fuso horário para um utilitário
+import { Event } from "../../types/eventTypes";
+import { getClientTimeZone } from "../utils/dateUtils";
 
 export const useEvents = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Função para buscar eventos com intervalo de datas opcional
   const fetchEvents = useCallback(
     async (startDate?: string, endDate?: string) => {
       console.log(
@@ -38,8 +37,8 @@ export const useEvents = () => {
 
         const response = await fetch(url, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Envia o token no cabeçalho
-            Timezone: clientTimeZone, // Envia o fuso horário no cabeçalho
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Timezone: clientTimeZone,
           },
         });
 
@@ -49,7 +48,9 @@ export const useEvents = () => {
 
         const data = await response.json();
         console.log("Eventos recebidos:", data);
-        setEvents(data);
+
+        // Garante que o estado seja atualizado com um novo array
+        setEvents([...data]); // Cria uma cópia do array
       } catch (error) {
         console.error("Erro ao buscar eventos:", error);
         setError(

@@ -9,7 +9,7 @@ import { useEvents } from "./hooks/events/useEvents";
 
 function App() {
   const { isAuthenticated, handleLogin, handleLogout } = useAuth();
-  const { events, fetchEvents } = useEvents();
+  const { events, fetchEvents, loading, error } = useEvents();
   const { handleFetchWithDates } = useEventFetch();
 
   // Busca os eventos automaticamente quando o usuário autentica
@@ -23,6 +23,9 @@ function App() {
   useEffect(() => {
     console.log("Eventos atualizados:", events);
   }, [events]);
+
+  if (loading) return <p>Carregando...</p>;
+  if (error) return <p>Erro: {error}</p>;
 
   return (
     <div
