@@ -21,26 +21,35 @@ const EventSummary: React.FC<EventSummaryProps> = ({
   periodFormat,
 }) => {
   return (
-    <div className="mb-4">
-      {/* Título do resumo */}
-      <h3 className="h5">
+    <div
+      className="mb-4"
+      style={{
+        backgroundColor: "#2D2D44",
+        padding: "1rem",
+        borderRadius: "8px",
+      }}
+    >
+      <h3 className="h5" style={{ color: "#4A90E2" }}>
         <FaChartBar className="mr-2" />
         {title}
       </h3>
-
-      {/* Lista de resumos por data */}
       <ul className="list-group">
         {Object.entries(summary).map(([date, tasks]) => (
-          <li key={date} className="list-group-item">
-            {/* Data formatada */}
+          <li
+            key={date}
+            className="list-group-item"
+            style={{
+              backgroundColor: "#1E1E2F",
+              color: "#E0E0E0",
+              borderColor: "#3A3A4F",
+            }}
+          >
             <strong>
               {format(parseISO(date), periodFormat, { locale: ptBR })}
             </strong>
-
-            {/* Lista de tarefas e durações */}
             <ul className="mt-2">
               {Object.entries(tasks).map(([task, duration]) => (
-                <li key={task}>
+                <li key={task} style={{ color: "#E0E0E0" }}>
                   <FaTasks className="mr-2" />
                   {task}: {formatMinutesToHours(duration)}
                 </li>

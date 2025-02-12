@@ -1,27 +1,11 @@
 import { useState, useCallback } from "react";
-
-interface Event {
-  id: string;
-  title: string;
-  start: string;
-  end: string;
-  link: string;
-}
+import { Event } from "../../types/eventTypes"; // Importe a interface Event de um arquivo separado
+import { getClientTimeZone } from "../utils/dateUtils"; // Mova a lógica de fuso horário para um utilitário
 
 export const useEvents = () => {
   const [events, setEvents] = useState<Event[]>([]);
-
-  // Função para obter o fuso horário do cliente no formato '-03:00'
-  const getClientTimeZone = (): string => {
-    const offset = new Date().getTimezoneOffset(); // Offset em minutos
-    const hours = Math.floor(Math.abs(offset) / 60);
-    const minutes = Math.abs(offset) % 60;
-    const sign = offset <= 0 ? "+" : "-"; // Inverte o sinal
-    return `${sign}${String(hours).padStart(2, "0")}:${String(minutes).padStart(
-      2,
-      "0"
-    )}`;
-  };
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Função para buscar eventos com intervalo de datas opcional
   const fetchEvents = useCallback(
@@ -30,7 +14,18 @@ export const useEvents = () => {
         `Buscando eventos de ${startDate || "∞"} a ${endDate || "∞"}...`
       );
 
+      setLoading(true);
+      setError(null);
+
       try {
+        // Validação das datas
+        if (startDate && isNaN(new Date(startDate).getTime())) {
+          throw new Error("Data de início inválida.");
+        }
+        if (endDate && isNaN(new Date(endDate).getTime())) {
+          throw new Error("Data de fim inválida.");
+        }
+
         // Monta a URL com os parâmetros de data se fornecidos
         const queryParams = new URLSearchParams();
         if (startDate) queryParams.append("startDate", startDate);
@@ -57,10 +52,17 @@ export const useEvents = () => {
         setEvents(data);
       } catch (error) {
         console.error("Erro ao buscar eventos:", error);
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Erro desconhecido ao buscar eventos."
+        );
+      } finally {
+        setLoading(false);
       }
     },
     [] // Dependências vazias: a função só é recriada se as dependências mudarem
   );
 
-  return { events, fetchEvents };
+  return { events, fetchEvents, loading, error };
 };

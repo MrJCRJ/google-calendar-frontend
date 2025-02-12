@@ -1,0 +1,9 @@
+// Sobrescreva as variáveis do Bootstrap
+$body-bg: #1e1e2f;
+$body-color: #ffffff;
+$primary: #4a90e2;
+$secondary: #2d2d44;
+$border-color: #3a3a4f;
+
+// Importe o Bootstrap após as sobrescritas
+@import "~bootstrap/scss/bootstrap";

@@ -10,3 +10,11 @@ export interface CalendarEvent {
 export interface EventListProps {
   events: CalendarEvent[];
 }
+
+export interface Event {
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+  link: string;
+}

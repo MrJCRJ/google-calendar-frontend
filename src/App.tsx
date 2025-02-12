@@ -19,8 +19,21 @@ function App() {
     }
   }, [isAuthenticated, fetchEvents]);
 
+  // Log para depuração
+  useEffect(() => {
+    console.log("Eventos atualizados:", events);
+  }, [events]);
+
   return (
-    <div className="container mt-5">
+    <div
+      className="container mt-5"
+      style={{
+        backgroundColor: "#1E1E2F",
+        color: "#FFFFFF",
+        padding: "2rem",
+        borderRadius: "8px",
+      }}
+    >
       <h1 className="text-center mb-4">Eventos do Google Calendar</h1>
 
       {isAuthenticated ? (
