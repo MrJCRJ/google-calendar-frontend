@@ -7,13 +7,28 @@ import {
   calculateDuration,
 } from "../../utils/dateUtils";
 
+// Interface para as props do componente
 interface EventItemProps {
-  event: CalendarEvent;
+  event: CalendarEvent; // O evento a ser exibido
 }
 
+/**
+ * Componente `EventItem`:
+ * Exibe os detalhes de um evento do calendário, incluindo título, data, duração e descrição.
+ * Também fornece um link para visualizar o evento no Google Calendar.
+ */
 const EventItem: React.FC<EventItemProps> = ({ event }) => {
+  // Formata a data de início e fim do evento
+  const formattedStartDate = formatDate(event.start);
+  const formattedEndDate = formatDate(event.end);
+
+  // Calcula a duração do evento em minutos e formata para horas
+  const eventDuration = calculateDuration(event.start, event.end);
+  const formattedDuration = formatMinutesToHours(eventDuration);
+
   return (
     <li className="list-group-item mb-3 shadow-sm">
+      {/* Cabeçalho do evento: Título e link para o Google Calendar */}
       <div className="d-flex justify-content-between align-items-center">
         <strong className="h5">{event.title}</strong>
         <a
@@ -21,20 +36,30 @@ const EventItem: React.FC<EventItemProps> = ({ event }) => {
           target="_blank"
           rel="noopener noreferrer"
           className="btn btn-outline-primary btn-sm"
+          aria-label={`Ver evento "${event.title}" no Google Calendar`}
         >
           <FaExternalLinkAlt className="mr-2" />
           Ver no Google Calendar
         </a>
       </div>
+
+      {/* Data e hora do evento */}
       <p className="mb-1 text-muted">
         <FaClock className="mr-2" />
-        {formatDate(event.start)} até {formatDate(event.end)}
+        {formattedStartDate} até {formattedEndDate}
       </p>
+
+      {/* Duração do evento */}
       <p className="mb-1">
-        <strong>Duração:</strong>{" "}
-        {formatMinutesToHours(calculateDuration(event.start, event.end))}
+        <strong>Duração:</strong> {formattedDuration}
       </p>
-      {event.description && <p className="mt-2">{event.description}</p>}
+
+      {/* Descrição do evento (se existir) */}
+      {event.description && (
+        <p className="mt-2" aria-label="Descrição do evento">
+          {event.description}
+        </p>
+      )}
     </li>
   );
 };
