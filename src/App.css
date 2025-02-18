@@ -1,0 +1,8 @@
+:root {
+  --primary-color: #6200ee; /* Roxo moderno */
+  --secondary-color: #03dac6; /* Ciano */
+  --background-color: #f5f5f5; /* Fundo claro */
+  --text-color: #333333; /* Texto escuro */
+  --card-background: #ffffff; /* Fundo dos cards */
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra dos cards */
+}
