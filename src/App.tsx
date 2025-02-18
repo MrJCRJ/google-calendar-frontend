@@ -5,6 +5,7 @@ import LogoutButton from "./components/LogoutButton";
 import { useAuth } from "./hooks/useAuth";
 import { useEvents } from "./hooks/useEvents";
 import { FaSearch } from "react-icons/fa";
+import { Container, Button, Form, Row, Col } from "react-bootstrap"; // Importe componentes do Bootstrap
 import "./App.css";
 
 function App() {
@@ -14,36 +15,22 @@ function App() {
   const [endDate, setEndDate] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+  // Aplica o tema ao carregar ou alterar o modo
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      "data-theme",
+      isDarkMode ? "dark" : "light"
+    );
+  }, [isDarkMode]);
+
+  // Busca os eventos ao autenticar
   useEffect(() => {
     if (isAuthenticated) {
       fetchEvents();
     }
   }, [isAuthenticated, fetchEvents]);
 
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.style.setProperty(
-        "--background-color",
-        "#1E1E2F"
-      );
-      document.documentElement.style.setProperty("--text-color", "#FFFFFF");
-      document.documentElement.style.setProperty(
-        "--card-background",
-        "#2D2D44"
-      );
-    } else {
-      document.documentElement.style.setProperty(
-        "--background-color",
-        "#F5F5F5"
-      );
-      document.documentElement.style.setProperty("--text-color", "#333333");
-      document.documentElement.style.setProperty(
-        "--card-background",
-        "#FFFFFF"
-      );
-    }
-  }, [isDarkMode]);
-
+  // Função para buscar eventos com intervalo de datas
   const handleFetchWithDates = () => {
     const clientTimeZoneOffset = new Date().getTimezoneOffset();
     const clientTimeZone = formatTimezoneOffset(clientTimeZoneOffset);
@@ -59,6 +46,7 @@ function App() {
     fetchEvents(startISO, endISO);
   };
 
+  // Formata o offset do fuso horário
   const formatTimezoneOffset = (offset: number): string => {
     const hours = Math.floor(Math.abs(offset) / 60);
     const minutes = Math.abs(offset) % 60;
@@ -70,73 +58,47 @@ function App() {
   };
 
   return (
-    <div
-      className="container mt-5"
-      style={{
-        backgroundColor: "var(--background-color)",
-        color: "var(--text-color)",
-        padding: "2rem",
-        borderRadius: "8px",
-        boxShadow: "var(--card-shadow)",
-      }}
-    >
+    <Container className="container-theme mt-5">
       <h1 className="text-center mb-4">Eventos do Google Calendar</h1>
 
       {isAuthenticated ? (
         <div>
-          <div className="d-flex justify-content-end mb-4 gap-2">
-            <button
-              className="btn"
-              style={{
-                backgroundColor: "var(--primary-color)",
-                color: "#ffffff",
-                borderRadius: "8px",
-                padding: "10px 20px",
-                border: "none",
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-              onClick={() => setIsDarkMode(!isDarkMode)}
-            >
-              {isDarkMode ? "Modo Claro" : "Modo Escuro"}
-            </button>
-            <LogoutButton onClick={handleLogout} />
-          </div>
+          <Row className="justify-content-end mb-4 gap-2">
+            <Col xs="auto">
+              <Button
+                variant="primary"
+                onClick={() => setIsDarkMode(!isDarkMode)}
+              >
+                {isDarkMode ? "Modo Claro" : "Modo Escuro"}
+              </Button>
+            </Col>
+            <Col xs="auto">
+              <LogoutButton onClick={handleLogout} />
+            </Col>
+          </Row>
 
-          <div className="mb-4 d-flex gap-2">
-            <input
-              type="date"
-              className="form-control"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-            <input
-              type="date"
-              className="form-control"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-            <button
-              className="btn"
-              style={{
-                backgroundColor: "var(--primary-color)",
-                color: "#ffffff",
-                borderRadius: "8px",
-                padding: "10px 20px",
-                border: "none",
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-              onClick={handleFetchWithDates}
-            >
-              <FaSearch />
-              Buscar
-            </button>
-          </div>
+          <Row className="mb-4 gap-2">
+            <Col>
+              <Form.Control
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+            </Col>
+            <Col>
+              <Form.Control
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </Col>
+            <Col xs="auto">
+              <Button variant="primary" onClick={handleFetchWithDates}>
+                <FaSearch />
+                Buscar
+              </Button>
+            </Col>
+          </Row>
 
           <EventList events={events} />
         </div>
@@ -145,7 +107,7 @@ function App() {
           <LoginButton onClick={handleLogin} />
         </div>
       )}
-    </div>
+    </Container>
   );
 }
 
