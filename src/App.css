@@ -17,7 +17,32 @@
   --secondary-color: #03dac6;
 }
 
-/* Aplicar tema ao container */
+/* Estilos para o Accordion */
+.accordion .accordion-item {
+  background-color: var(--card-background);
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.accordion .accordion-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+}
+
+.accordion .accordion-button:not(.collapsed) {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.accordion .accordion-body {
+  padding: 1rem;
+  background-color: var(--card-background);
+}
+
+/* Estilos para o container */
 .container-theme {
   background-color: var(--background-color);
   color: var(--text-color);

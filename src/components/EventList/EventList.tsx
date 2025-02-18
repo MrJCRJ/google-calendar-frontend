@@ -1,51 +1,30 @@
-import React, { useEffect } from "react";
-import { FaCalendarAlt } from "react-icons/fa";
-import { EventListProps } from "../../types/eventTypes";
+import React from "react";
+import { Accordion } from "react-bootstrap";
 import { groupEventsByPeriod } from "../../utils/dateUtils";
-import EventItem from "./EventItem";
-import EventSummary from "./EventSummary";
+import MonthAccordion from "./MonthAccordion";
+import { CalendarEvent } from "../../types/eventTypes";
+
+interface EventListProps {
+  events: CalendarEvent[];
+}
 
 const EventList: React.FC<EventListProps> = ({ events }) => {
-  // Log para depuração
-  useEffect(() => {
-    console.log("EventList recebeu eventos:", events);
-  }, [events]);
-
-  // Agrupa os eventos por período (diário, semanal e mensal)
-  const { dailySummary, weeklySummary, monthlySummary } =
-    groupEventsByPeriod(events);
+  const groupedEvents = groupEventsByPeriod(events);
 
   return (
     <div className="mt-4">
-      <h2 className="h4 mb-3">Eventos e Estatísticas</h2>
-
-      <EventSummary
-        title="Resumo Diário"
-        summary={dailySummary}
-        periodFormat="dd/MM/yyyy"
-      />
-      <EventSummary
-        title="Resumo Semanal"
-        summary={weeklySummary}
-        periodFormat="'Semana de' dd/MM/yyyy"
-      />
-      <EventSummary
-        title="Resumo Mensal"
-        summary={monthlySummary}
-        periodFormat="MMMM yyyy"
-      />
-
-      <div>
-        <h3 className="h5">
-          <FaCalendarAlt className="mr-2" />
-          Lista de Eventos
-        </h3>
-        <ul className="list-group">
-          {events.map((event) => (
-            <EventItem key={event.id} event={event} />
-          ))}
-        </ul>
-      </div>
+      <h2 className="h4 mb-3">Eventos Agrupados</h2>
+      <Accordion alwaysOpen>
+        {" "}
+        {/* Adicione a propriedade alwaysOpen */}
+        {Object.entries(groupedEvents).map(([monthKey, monthData]) => (
+          <MonthAccordion
+            key={monthKey}
+            monthKey={monthKey}
+            weeks={monthData.weeks}
+          />
+        ))}
+      </Accordion>
     </div>
   );
 };

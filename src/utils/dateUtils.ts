@@ -61,53 +61,61 @@ interface EventSummary {
 }
 
 interface GroupedEvents {
-  [date: string]: EventSummary; // Data -> Resumo de tarefas
+  [key: string]: {
+    [key: string]: number; // Duração total por título do evento
+  };
 }
 
-/**
- * Agrupa eventos por período (diário, semanal e mensal) e calcula a duração total de cada tarefa.
- * @param events - A lista de eventos.
- * @returns Um objeto contendo os resumos diário, semanal e mensal.
- */
+interface HierarchicalEvents {
+  [month: string]: {
+    weeks: {
+      [week: string]: {
+        days: {
+          [day: string]: CalendarEvent[];
+        };
+      };
+    };
+  };
+}
+
 export const groupEventsByPeriod = (
   events: CalendarEvent[]
-): {
-  dailySummary: GroupedEvents;
-  weeklySummary: GroupedEvents;
-  monthlySummary: GroupedEvents;
-} => {
-  const dailySummary: GroupedEvents = {};
-  const weeklySummary: GroupedEvents = {};
-  const monthlySummary: GroupedEvents = {};
+): HierarchicalEvents => {
+  const hierarchicalSummary: HierarchicalEvents = {};
+
+  console.log("Eventos recebidos:", events);
 
   events.forEach((event) => {
     try {
+      if (!event.start) {
+        console.warn(`Evento "${event.title}" sem data de início.`);
+        return;
+      }
+
       const startDate = parseISO(event.start);
-      const dayKey = startOfDay(startDate).toISOString();
-      const weekKey = startOfWeek(startDate).toISOString();
-      const monthKey = startOfMonth(startDate).toISOString();
+      if (isNaN(startDate.getTime())) {
+        console.warn(
+          `Data inválida no evento "${event.title}": ${event.start}`
+        );
+        return;
+      }
 
-      const duration = calculateDuration(event.start, event.end);
+      // Formata as chaves de mês, semana e dia
+      const dayKey = format(startOfDay(startDate), "yyyy-MM-dd");
+      const weekKey = format(startOfWeek(startDate), "yyyy-'W'ww"); // Semana começa na segunda
+      const monthKey = format(startOfMonth(startDate), "yyyy-MM");
 
-      // Função para adicionar a duração ao resumo
-      const addToSummary = (
-        summary: GroupedEvents,
-        key: string,
-        title: string,
-        duration: number
-      ) => {
-        if (!summary[key]) summary[key] = {};
-        summary[key][title] = (summary[key][title] || 0) + duration;
-      };
+      // Inicializa mês e semana apenas se houver eventos
+      hierarchicalSummary[monthKey] ??= { weeks: {} };
+      hierarchicalSummary[monthKey].weeks[weekKey] ??= { days: {} };
+      hierarchicalSummary[monthKey].weeks[weekKey].days[dayKey] ??= [];
 
-      // Adiciona ao resumo diário, semanal e mensal
-      addToSummary(dailySummary, dayKey, event.title, duration);
-      addToSummary(weeklySummary, weekKey, event.title, duration);
-      addToSummary(monthlySummary, monthKey, event.title, duration);
+      // Adiciona o evento ao dia correto
+      hierarchicalSummary[monthKey].weeks[weekKey].days[dayKey].push(event);
     } catch (error) {
-      console.error(`Erro ao processar o evento ${event.title}:`, error);
+      console.error(`Erro ao processar o evento "${event.title}":`, error);
     }
   });
 
-  return { dailySummary, weeklySummary, monthlySummary };
+  return hierarchicalSummary;
 };
