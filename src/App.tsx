@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import EventList from "./components/EventList";
-import LoginButton from "./components/Auth/LoginButton";
-import LogoutButton from "./components/Auth/LogoutButton";
-import { useAuth } from "./hooks/auth/useAuth";
-import { useEvents } from "./hooks/events/useEvents";
-import { FaSearch, FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
+import LoginButton from "./components/LoginButton";
+import LogoutButton from "./components/LogoutButton";
+import { useAuth } from "./hooks/useAuth";
+import { useEvents } from "./hooks/useEvents";
+import { FaSearch } from "react-icons/fa";
 import "./App.css";
 
 function App() {
@@ -12,12 +12,37 @@ function App() {
   const { events, fetchEvents, loading, error } = useEvents();
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
       fetchEvents();
     }
   }, [isAuthenticated, fetchEvents]);
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.style.setProperty(
+        "--background-color",
+        "#1E1E2F"
+      );
+      document.documentElement.style.setProperty("--text-color", "#FFFFFF");
+      document.documentElement.style.setProperty(
+        "--card-background",
+        "#2D2D44"
+      );
+    } else {
+      document.documentElement.style.setProperty(
+        "--background-color",
+        "#F5F5F5"
+      );
+      document.documentElement.style.setProperty("--text-color", "#333333");
+      document.documentElement.style.setProperty(
+        "--card-background",
+        "#FFFFFF"
+      );
+    }
+  }, [isDarkMode]);
 
   const handleFetchWithDates = () => {
     const clientTimeZoneOffset = new Date().getTimezoneOffset();
@@ -59,7 +84,24 @@ function App() {
 
       {isAuthenticated ? (
         <div>
-          <div className="d-flex justify-content-end mb-4">
+          <div className="d-flex justify-content-end mb-4 gap-2">
+            <button
+              className="btn"
+              style={{
+                backgroundColor: "var(--primary-color)",
+                color: "#ffffff",
+                borderRadius: "8px",
+                padding: "10px 20px",
+                border: "none",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+              onClick={() => setIsDarkMode(!isDarkMode)}
+            >
+              {isDarkMode ? "Modo Claro" : "Modo Escuro"}
+            </button>
             <LogoutButton onClick={handleLogout} />
           </div>
 
