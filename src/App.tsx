@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import EventList from "./components/EventList";
-import LoginButton from "./components/LoginButton";
-import LogoutButton from "./components/LogoutButton";
-import { useAuth } from "./hooks/useAuth";
-import { useEvents } from "./hooks/useEvents";
+import LoginButton from "./components/Auth/LoginButton";
+import LogoutButton from "./components/Auth/LogoutButton";
+import { useAuth } from "./hooks/auth/useAuth";
+import { useEvents } from "./hooks/events/useEvents";
 import { FaSearch } from "react-icons/fa";
 import { Container, Button, Form, Row, Col } from "react-bootstrap"; // Importe componentes do Bootstrap
 import "./App.css";
