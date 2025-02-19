@@ -2,18 +2,11 @@ import React, { useEffect, useState, useCallback } from "react";
 import EventList from "./components/EventList";
 import LoginButton from "./components/Auth/LoginButton";
 import LogoutButton from "./components/Auth/LogoutButton";
+import ThemeToggle from "./components/UI/ThemeToggle";
+import EventFilter from "./components/EventList/EventFilter";
 import { useAuth } from "./hooks/auth/useAuth";
 import { useEvents } from "./hooks/events/useEvents";
-import { FaSearch, FaSun, FaMoon } from "react-icons/fa";
-import {
-  Container,
-  Button,
-  Form,
-  Row,
-  Col,
-  Spinner,
-  Alert,
-} from "react-bootstrap";
+import { Container, Row, Col, Spinner, Alert } from "react-bootstrap";
 import "./App.css";
 
 const App: React.FC = () => {
@@ -21,11 +14,10 @@ const App: React.FC = () => {
   const { events, fetchEvents, loading, error } = useEvents();
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    return localStorage.getItem("darkMode") === "true";
-  });
+  const [isDarkMode, setIsDarkMode] = useState(
+    () => localStorage.getItem("darkMode") === "true"
+  );
 
-  // Alterna o tema e salva a preferência do usuário
   const toggleDarkMode = () => {
     setIsDarkMode((prev) => {
       const newMode = !prev;
@@ -35,19 +27,14 @@ const App: React.FC = () => {
     });
   };
 
-  // Aplica o tema ao carregar
   useEffect(() => {
     document.documentElement.classList.toggle("dark-mode", isDarkMode);
   }, [isDarkMode]);
 
-  // Busca eventos automaticamente quando o usuário está autenticado
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchEvents();
-    }
+    if (isAuthenticated) fetchEvents();
   }, [isAuthenticated, fetchEvents]);
 
-  // Busca eventos dentro do intervalo de datas informado
   const handleFetchWithDates = useCallback(() => {
     const formatTimezoneOffset = (offset: number): string => {
       const sign = offset <= 0 ? "+" : "-";
@@ -81,37 +68,23 @@ const App: React.FC = () => {
         <>
           <Row className="justify-content-between align-items-center mb-4">
             <Col xs="auto">
-              <Button variant="secondary" onClick={toggleDarkMode}>
-                {isDarkMode ? <FaSun /> : <FaMoon />}{" "}
-                {isDarkMode ? "Modo Claro" : "Modo Escuro"}
-              </Button>
+              <ThemeToggle
+                isDarkMode={isDarkMode}
+                toggleDarkMode={toggleDarkMode}
+              />
             </Col>
             <Col xs="auto">
               <LogoutButton onClick={handleLogout} />
             </Col>
           </Row>
 
-          <Row className="mb-4">
-            <Col md={5}>
-              <Form.Control
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-            </Col>
-            <Col md={5}>
-              <Form.Control
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
-            </Col>
-            <Col md="auto">
-              <Button variant="primary" onClick={handleFetchWithDates}>
-                <FaSearch /> Buscar
-              </Button>
-            </Col>
-          </Row>
+          <EventFilter
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            handleFetchWithDates={handleFetchWithDates}
+          />
 
           {loading && (
             <div className="text-center my-3">
