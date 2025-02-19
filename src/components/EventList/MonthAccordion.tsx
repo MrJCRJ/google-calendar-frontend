@@ -15,10 +15,13 @@ interface MonthAccordionProps {
 }
 
 const MonthAccordion: React.FC<MonthAccordionProps> = ({ monthKey, weeks }) => {
+  // Corrige a interpretação do mês adicionando um dia específico
+  const monthDate = new Date(`${monthKey}-01`);
+
   return (
     <Accordion.Item eventKey={monthKey}>
       <Accordion.Header>
-        {new Date(monthKey).toLocaleDateString("pt-BR", {
+        {new Date(`${monthKey}-01T00:00:00`).toLocaleDateString("pt-BR", {
           month: "long",
           year: "numeric",
         })}

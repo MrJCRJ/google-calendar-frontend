@@ -83,9 +83,7 @@ export const groupEventsByPeriod = (
 ): HierarchicalEvents => {
   const hierarchicalSummary: HierarchicalEvents = {};
 
-  console.log("Eventos recebidos:", events);
-
-  events.forEach((event) => {
+  events.forEach((event, index) => {
     try {
       if (!event.start) {
         console.warn(`Evento "${event.title}" sem data de início.`);
