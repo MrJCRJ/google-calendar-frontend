@@ -60,8 +60,8 @@ interface EventSummary {
 }
 
 interface GroupedEvents {
-  [key: string]: {
-    [key: string]: number; // Duração total por título do evento
+  [month: string]: {
+    days: Record<string, CalendarEvent[]>; // Defini explicitamente como um objeto indexado por strings
   };
 }
 
@@ -73,10 +73,8 @@ interface HierarchicalEvents {
   };
 }
 
-export const groupEventsByPeriod = (
-  events: CalendarEvent[]
-): HierarchicalEvents => {
-  const hierarchicalSummary: HierarchicalEvents = {};
+export const groupEventsByPeriod = (events: CalendarEvent[]): GroupedEvents => {
+  const groupedEvents: GroupedEvents = {};
 
   events.forEach((event) => {
     try {
@@ -93,20 +91,19 @@ export const groupEventsByPeriod = (
         return;
       }
 
-      // Formata as chaves de mês e dia
-      const dayKey = format(startOfDay(startDate), "yyyy-MM-dd");
       const monthKey = format(startOfMonth(startDate), "yyyy-MM");
+      const dayKey = format(startOfDay(startDate), "yyyy-MM-dd");
 
-      // Inicializa mês e dia apenas se houver eventos
-      hierarchicalSummary[monthKey] ??= { days: {} };
-      hierarchicalSummary[monthKey].days[dayKey] ??= [];
+      // Se o mês ainda não existir, cria o objeto
+      groupedEvents[monthKey] ??= { days: {} };
 
-      // Adiciona o evento ao dia correto
-      hierarchicalSummary[monthKey].days[dayKey].push(event);
+      // Adiciona o evento apenas se houver eventos no dia
+      groupedEvents[monthKey].days[dayKey] ??= [];
+      groupedEvents[monthKey].days[dayKey].push(event);
     } catch (error) {
       console.error(`Erro ao processar o evento "${event.title}":`, error);
     }
   });
 
-  return hierarchicalSummary;
+  return groupedEvents;
 };

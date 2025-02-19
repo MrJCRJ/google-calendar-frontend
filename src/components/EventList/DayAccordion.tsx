@@ -11,9 +11,7 @@ interface DayAccordionProps {
 const DayAccordion: React.FC<DayAccordionProps> = ({ dayKey, events }) => {
   return (
     <Accordion.Item eventKey={dayKey}>
-      <Accordion.Header>
-        {new Date(dayKey).toLocaleDateString("pt-BR")}
-      </Accordion.Header>
+      <Accordion.Header>{dayKey}</Accordion.Header>
       <Accordion.Body>
         <ListGroup>
           {events.map((event) => (
