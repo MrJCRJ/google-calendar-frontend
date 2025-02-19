@@ -28,4 +28,4 @@ const EventList: React.FC<EventListProps> = ({ events }) => {
   );
 };
 
-export default EventList;
+export default React.memo(EventList);
