@@ -1,0 +1,47 @@
+/* Estilo personalizado para o componente EventItem */
+.event-item {
+  background-color: #2d2d44;
+  color: #ffffff;
+  border-color: #3a3a4f;
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.event-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.event-title {
+  color: #4a90e2;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.event-link {
+  color: #4a90e2;
+  border-color: #4a90e2;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.event-link:hover {
+  background-color: #4a90e2;
+  color: #ffffff;
+}
+
+.event-time {
+  color: #986464;
+  font-size: 0.9rem;
+}
+
+.event-duration {
+  color: #e0e0e0;
+  font-size: 0.9rem;
+}
+
+.event-description {
+  color: #e0e0e0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}

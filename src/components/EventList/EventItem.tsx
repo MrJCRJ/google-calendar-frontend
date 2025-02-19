@@ -6,6 +6,7 @@ import {
   formatMinutesToHours,
   calculateDuration,
 } from "../../utils/dateUtils";
+import "./EventItem.css"; // Importando o arquivo CSS personalizado
 
 // Interface para as props do componente
 interface EventItemProps {
@@ -27,39 +28,28 @@ const EventItem: React.FC<EventItemProps> = ({ event }) => {
   const formattedDuration = formatMinutesToHours(eventDuration);
 
   return (
-    <li
-      className="list-group-item mb-3 shadow-sm"
-      style={{
-        backgroundColor: "#2D2D44",
-        color: "#FFFFFF",
-        borderColor: "#3A3A4F",
-      }}
-    >
-      <div className="d-flex justify-content-between align-items-center">
-        <strong className="h5">{event.title}</strong>
+    <li className="list-group-item mb-3 shadow-sm event-item">
+      <div className="d-flex justify-content-between align-items-center mb-2">
+        <strong className="h5 event-title">{event.title}</strong>
         <a
           href={event.link}
           target="_blank"
           rel="noopener noreferrer"
-          className="btn btn-outline-primary btn-sm"
-          style={{ color: "#4A90E2", borderColor: "#4A90E2" }}
+          className="btn btn-outline-primary btn-sm event-link"
         >
           <FaExternalLinkAlt className="mr-2" />
           Ver no Google Calendar
         </a>
       </div>
-      <p className="mb-1 text-muted" style={{ color: "#E0E0E0" }}>
+      <p className="mb-1 event-time">
         <FaClock className="mr-2" />
-        {formatDate(event.start)} até {formatDate(event.end)}
+        {formattedStartDate} até {formattedEndDate}
       </p>
-      <p className="mb-1" style={{ color: "#E0E0E0" }}>
-        <strong>Duração:</strong>{" "}
-        {formatMinutesToHours(calculateDuration(event.start, event.end))}
+      <p className="mb-1 event-duration">
+        <strong>Duração:</strong> {formattedDuration}
       </p>
       {event.description && (
-        <p className="mt-2" style={{ color: "#E0E0E0" }}>
-          {event.description}
-        </p>
+        <p className="mt-2 event-description">{event.description}</p>
       )}
     </li>
   );
