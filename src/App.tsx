@@ -7,6 +7,8 @@ import EventFilter from "./components/EventList/EventFilter";
 import { useAuth } from "./hooks/auth/useAuth";
 import { useEvents } from "./hooks/events/useEvents";
 import { Container, Row, Col, Spinner, Alert } from "react-bootstrap";
+import { useDarkMode } from "./hooks/useDarkMode";
+import { formatTimezoneOffset } from "./hooks/useTimezone";
 import "./App.css";
 
 const App: React.FC = () => {
@@ -14,37 +16,13 @@ const App: React.FC = () => {
   const { events, fetchEvents, loading, error } = useEvents();
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(
-    () => localStorage.getItem("darkMode") === "true"
-  );
-
-  const toggleDarkMode = () => {
-    setIsDarkMode((prev) => {
-      const newMode = !prev;
-      localStorage.setItem("darkMode", String(newMode));
-      document.documentElement.classList.toggle("dark-mode", newMode);
-      return newMode;
-    });
-  };
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark-mode", isDarkMode);
-  }, [isDarkMode]);
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   useEffect(() => {
     if (isAuthenticated) fetchEvents();
   }, [isAuthenticated, fetchEvents]);
 
   const handleFetchWithDates = useCallback(() => {
-    const formatTimezoneOffset = (offset: number): string => {
-      const sign = offset <= 0 ? "+" : "-";
-      const hours = Math.floor(Math.abs(offset) / 60)
-        .toString()
-        .padStart(2, "0");
-      const minutes = (Math.abs(offset) % 60).toString().padStart(2, "0");
-      return `${sign}${hours}:${minutes}`;
-    };
-
     const clientTimeZoneOffset = new Date().getTimezoneOffset();
     const clientTimeZone = formatTimezoneOffset(clientTimeZoneOffset);
 
