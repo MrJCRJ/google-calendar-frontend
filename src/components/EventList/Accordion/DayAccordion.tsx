@@ -1,7 +1,7 @@
 import React from "react";
 import { Accordion, ListGroup } from "react-bootstrap";
-import EventItem from "./EventItem";
-import { CalendarEvent } from "../../types/eventTypes";
+import EventItem from "../EventItem";
+import { CalendarEvent } from "../../../types/eventTypes";
 
 interface DayAccordionProps {
   dayKey: string;

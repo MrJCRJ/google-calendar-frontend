@@ -1,7 +1,7 @@
 import React from "react";
 import { Accordion } from "react-bootstrap";
 import DayAccordion from "./DayAccordion";
-import { CalendarEvent } from "../../types/eventTypes";
+import { CalendarEvent } from "../../../types/eventTypes";
 
 interface MonthAccordionProps {
   monthKey: string;

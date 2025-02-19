@@ -1,7 +1,7 @@
 import React from "react";
 import { Accordion } from "react-bootstrap";
 import { groupEventsByPeriod } from "../../utils/dateUtils";
-import MonthAccordion from "./MonthAccordion";
+import MonthAccordion from "./Accordion/MonthAccordion";
 import { CalendarEvent } from "../../types/eventTypes";
 
 interface EventListProps {
