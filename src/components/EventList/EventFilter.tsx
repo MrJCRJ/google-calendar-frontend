@@ -1,4 +1,5 @@
-import React from "react";
+// EventFilter.tsx
+import React, { ChangeEvent } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 
@@ -17,21 +18,25 @@ const EventFilter: React.FC<EventFilterProps> = ({
   setEndDate,
   handleFetchWithDates,
 }) => {
+  const handleStartChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setStartDate(e.target.value);
+  };
+
+  const handleEndChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setEndDate(e.target.value);
+  };
+
   return (
     <Row className="mb-4">
       <Col md={5}>
         <Form.Control
           type="date"
           value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
+          onChange={handleStartChange}
         />
       </Col>
       <Col md={5}>
-        <Form.Control
-          type="date"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-        />
+        <Form.Control type="date" value={endDate} onChange={handleEndChange} />
       </Col>
       <Col md="auto">
         <Button variant="primary" onClick={handleFetchWithDates}>
@@ -42,4 +47,4 @@ const EventFilter: React.FC<EventFilterProps> = ({
   );
 };
 
-export default EventFilter;
+export default React.memo(EventFilter);
