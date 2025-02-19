@@ -3,7 +3,6 @@ import {
   parseISO,
   differenceInMinutes,
   startOfDay,
-  startOfWeek,
   startOfMonth,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -68,12 +67,8 @@ interface GroupedEvents {
 
 interface HierarchicalEvents {
   [month: string]: {
-    weeks: {
-      [week: string]: {
-        days: {
-          [day: string]: CalendarEvent[];
-        };
-      };
+    days: {
+      [day: string]: CalendarEvent[];
     };
   };
 }
@@ -83,7 +78,7 @@ export const groupEventsByPeriod = (
 ): HierarchicalEvents => {
   const hierarchicalSummary: HierarchicalEvents = {};
 
-  events.forEach((event, index) => {
+  events.forEach((event) => {
     try {
       if (!event.start) {
         console.warn(`Evento "${event.title}" sem data de início.`);
@@ -98,18 +93,16 @@ export const groupEventsByPeriod = (
         return;
       }
 
-      // Formata as chaves de mês, semana e dia
+      // Formata as chaves de mês e dia
       const dayKey = format(startOfDay(startDate), "yyyy-MM-dd");
-      const weekKey = format(startOfWeek(startDate), "yyyy-'W'ww"); // Semana começa na segunda
       const monthKey = format(startOfMonth(startDate), "yyyy-MM");
 
-      // Inicializa mês e semana apenas se houver eventos
-      hierarchicalSummary[monthKey] ??= { weeks: {} };
-      hierarchicalSummary[monthKey].weeks[weekKey] ??= { days: {} };
-      hierarchicalSummary[monthKey].weeks[weekKey].days[dayKey] ??= [];
+      // Inicializa mês e dia apenas se houver eventos
+      hierarchicalSummary[monthKey] ??= { days: {} };
+      hierarchicalSummary[monthKey].days[dayKey] ??= [];
 
       // Adiciona o evento ao dia correto
-      hierarchicalSummary[monthKey].weeks[weekKey].days[dayKey].push(event);
+      hierarchicalSummary[monthKey].days[dayKey].push(event);
     } catch (error) {
       console.error(`Erro ao processar o evento "${event.title}":`, error);
     }

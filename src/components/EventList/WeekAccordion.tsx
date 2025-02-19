@@ -1,7 +1,7 @@
 import React from "react";
 import { Accordion } from "react-bootstrap";
-import DayAccordion from "./DayAccordion";
-import { parseISO } from "date-fns";
+
+import { parseISO, getISOWeek } from "date-fns";
 import { CalendarEvent } from "../../types/eventTypes";
 
 interface WeekAccordionProps {
@@ -14,16 +14,13 @@ interface WeekAccordionProps {
 const WeekAccordion: React.FC<WeekAccordionProps> = ({ weekKey, days }) => {
   const weekStartDate = parseISO(weekKey);
 
+  // Obtém o número da semana no ano
+  const weekNumber = getISOWeek(weekStartDate);
+
   return (
     <Accordion.Item eventKey={weekKey}>
-      <Accordion.Header>
-        Semana de {weekStartDate.toLocaleDateString("pt-BR")}
-      </Accordion.Header>
-      <Accordion.Body>
-        {Object.entries(days).map(([dayKey, dayEvents]) => (
-          <DayAccordion key={dayKey} dayKey={dayKey} events={dayEvents} />
-        ))}
-      </Accordion.Body>
+      <Accordion.Header>Semana {weekNumber}</Accordion.Header>
+      <Accordion.Body></Accordion.Body>
     </Accordion.Item>
   );
 };
