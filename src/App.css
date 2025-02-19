@@ -1,35 +1,95 @@
+/* Variáveis de tema */
 :root {
-  /* Cores */
   --primary-color: #6200ee;
   --secondary-color: #03dac6;
   --background-color: #f5f5f5;
   --text-color: #333333;
   --card-background: #ffffff;
-  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --card-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  --border-radius: 8px;
+  --transition-speed: 0.3s;
 }
 
 /* Tema escuro */
-[data-theme="dark"] {
+.dark-mode {
   --background-color: #1e1e2f;
-  --text-color: #ffffff;
+  --text-color: #e0e0e0;
   --card-background: #2d2d44;
   --primary-color: #bb86fc;
   --secondary-color: #03dac6;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilização base do container principal */
+.container-theme {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  transition: background-color var(--transition-speed),
+    color var(--transition-speed);
+}
+
+/* Botões */
+button {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--border-radius);
+  transition: all var(--transition-speed);
+}
+
+button:hover {
+  opacity: 0.85;
+}
+
+/* Botão de alternância de tema */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+}
+
+.theme-toggle svg {
+  font-size: 18px;
+}
+
+/* Input de datas */
+input[type="date"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  background-color: var(--card-background);
+  color: var(--text-color);
+  transition: all var(--transition-speed);
+}
+
+input[type="date"]:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 6px var(--primary-color);
 }
 
 /* Estilos para o Accordion */
 .accordion .accordion-item {
   background-color: var(--card-background);
   border: 1px solid rgba(0, 0, 0, 0.125);
-  border-radius: 0.25rem;
+  border-radius: var(--border-radius);
   margin-bottom: 0.5rem;
+  box-shadow: var(--card-shadow);
 }
 
 .accordion .accordion-button {
   background-color: var(--primary-color);
   color: white;
   border: none;
-  border-radius: 0.25rem;
+  border-radius: var(--border-radius);
+  transition: background-color var(--transition-speed);
 }
 
 .accordion .accordion-button:not(.collapsed) {
@@ -37,17 +97,24 @@
   color: white;
 }
 
+/* Ajuste do corpo do Accordion */
 .accordion .accordion-body {
   padding: 1rem;
   background-color: var(--card-background);
+  color: var(--text-color);
 }
 
-/* Estilos para o container */
-.container-theme {
-  background-color: var(--background-color);
-  color: var(--text-color);
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: var(--card-shadow);
-  transition: background-color 0.3s ease, color 0.3s ease;
+/* Melhorias para responsividade */
+@media (max-width: 768px) {
+  .container-theme {
+    padding: 1.5rem;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  input[type="date"] {
+    width: 100%;
+  }
 }
