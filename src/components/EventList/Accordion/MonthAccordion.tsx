@@ -2,6 +2,7 @@ import React from "react";
 import { Accordion } from "react-bootstrap";
 import DayAccordion from "./DayAccordion";
 import { CalendarEvent } from "../../../types/eventTypes";
+import MonthSummary from "./MonthSummary";
 
 interface MonthAccordionProps {
   monthKey: string;
@@ -20,6 +21,7 @@ const MonthAccordion: React.FC<MonthAccordionProps> = ({ monthKey, days }) => {
         })}
       </Accordion.Header>
       <Accordion.Body>
+        <MonthSummary days={days} />
         {Object.entries(days).map(([dayKey, dayEvents]) => (
           <DayAccordion key={dayKey} dayKey={dayKey} events={dayEvents} />
         ))}
